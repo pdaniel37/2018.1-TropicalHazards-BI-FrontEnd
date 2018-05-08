@@ -12,7 +12,7 @@ before_script:
 - npm install coveralls
 - docker-compose -f docker-compose.test.yml up -d
 script:
-- docker exec -it tropical-hazards-front npm test
+- docker exec -it tropical-hazards-front npm test && npx semantic-release
 after_script:
 - "./node_modules/coveralls/bin/coveralls.js < ./test/unit/coverage/lcov.info"
 - docker-compose down --remove-orphans
@@ -24,10 +24,9 @@ after_success:
     echo "Deploying to homolog environment..."
     docker tag deploy_image registry.heroku.com/tropical-hazards-homolog/web
     docker push registry.heroku.com/tropical-hazards-homolog/web
-  else if [ "${TRAVIS_BRANCH}" == "master" ] && [ "$TRAVIS_PULL_REQUEST" = "false" ]; then
-    echo "Deploying to production environment..."
-    docker tag deploy_image registry.heroku.com/tropical-hazards/web
-    docker push registry.heroku.com/tropical-hazards/web
+  else if [ "${TRAVIS_BRANCH}" == "buildzao" ] && [ "$TRAVIS_PULL_REQUEST" = "false" ]; then
+    echo "Creating Release package..."
+    npx semantic-release
   else
     echo "Skipping deploy...";
   fi;
