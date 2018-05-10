@@ -1,23 +1,72 @@
-import Vue from "vue"
-import { mount } from "@vue/test-utils"
+import sinon from "sinon"
+import Vuex from "vuex"
+import { shallow, createLocalVue } from "@vue/test-utils"
 import Login from "@/components/Authentication/Login"
 
 describe("Login", () => {
-    it("placeholder test", () => {
-        expect(true).toBeTruthy()
+    const localVue = createLocalVue()
+    localVue.use(Vuex)
+
+    const sandbox = sinon.createSandbox()
+    const stub = sandbox.stub()
+
+    let state
+    let actions
+    let store
+
+    beforeEach(() => {
+        actions = {
+
+        },
+        state = {
+
+        }
+
+        store = new Vuex.Store({
+            state,
+            actions,
+        })
     })
 
-    // it("Should render the title", () => {
-    //   const Constructor = Vue.extend(Login)
-    //   const vm = new Constructor().$mount()
+    afterEach(() => {
+        sandbox.reset()
+        sandbox.restore()
+    })
 
-    //   expect(vm.$el.querySelector("#ancora .container h1").textContent).to.equal("Login")
-    // })
+    it("Should login correctly", () => {
+        const errors = {
+            has: sandbox.stub()
+        }
 
-    // it("Should render the form", () => {
-    //   const Constructor = Vue.extend(Login)
-    //   const vm = new Constructor().$mount()
+        const $router = {
+            push: sandbox.stub()
+        }
 
-    //   expect(vm.$el.querySelector("input[type="text"]")).to.equal(true)
-    // })
+        const wrapper = shallow(Login, { store, localVue, mocks: {$router, errors} })
+        wrapper.vm.Login()
+
+        expect(actions.Login.called).toBeTruthy()
+        // wrapper.vm.$nextTick(() => {
+        //     expect(wrapper.vm.$router.push.called).to.be.true;
+        //     done()
+        // })
+    })
+
+    it("Should not login if credentials are messed up", () => {
+        const errors = {
+            has: sandbox.stub()
+        }
+
+        const wrapper = shallow(Login, { store, localVue, mocks: { errors } })
+
+        stub.reset()
+        stub.rejects()
+
+        wrapper.vm.Login()
+
+        expect(actions.Login.called).toBeTruthy()
+        // wrapper.vm.$nextTick(() => {
+        //     done()
+        // })
+    })
 })
