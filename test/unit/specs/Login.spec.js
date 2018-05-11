@@ -46,10 +46,10 @@ describe("Login", () => {
         wrapper.vm.Login()
 
         expect(actions.Login.called).toBeTruthy()
-        // wrapper.vm.$nextTick(() => {
-        //     expect(wrapper.vm.$router.push.called).to.be.true;
-        //     done()
-        // })
+        wrapper.vm.$nextTick(() => {
+            expect(wrapper.vm.$router.push.called).toBeTruthy()
+            done()
+        })
     })
 
     it("Should not login if credentials are messed up", () => {

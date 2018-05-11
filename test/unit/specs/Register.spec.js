@@ -45,4 +45,10 @@ describe("tests of Register.vue", () => {
         setData(wrapper)
         expect(wrapper.vm.$v.$invalid).toBeFalsy()
     })
+
+    it("should register correctly if everything is fine", () => {
+        setData(wrapper)
+        wrapper.vm.register()
+        expect(wrapper.vm.register).toBeCalled()
+    })
 })

@@ -22,7 +22,8 @@
               <modal
                 v-show="isModalVisibleLogin"
                 @close="closeModalLogin"/>
-              <a @click="showModalLogin">
+              <a @click="showModalLogin"
+                id="modal-login-trigger">
                 <li class="navbar-item">
                   <span class="fa fa-sign-in">Login</span>
                 </li>
@@ -34,7 +35,8 @@
               <modalRegister
                 v-show="isModalVisibleRegister"
                 @closed="closeModalRegister"/>
-              <a @click="showModalRegister">
+              <a @click="showModalRegister"
+                id="modal-register-trigger">
                 <li class="navbar-item">
                   <span class="fa fa-arrow-up">Registrar</span>
                 </li>

@@ -1,16 +1,54 @@
-// import { shallow } from "@vue/test-utils"
-// import Navbar from "@/components/Utils/Navbar"
+import { shallow, createLocalVue } from "@vue/test-utils"
+import Vuex from "vuex"
+import sinon from "sinon"
+import Navbar from "@/components/Utils/Navbar"
 
 describe("Navbar.vue", () => {
-    it("placeholder text", () => {
-        // this one has the same problem as the login test
+    const localVue = createLocalVue()
+    localVue.use(Vuex)
+
+    const sandbox = sinon.createSandbox()
+
+    let state
+    let actions
+    let store
+
+    beforeEach(() => {
+        state = {
+
+        },
+        actions = {
+            logout: sandbox.stub(),
+            login: sandbox.stub(),
+        }
     })
 
-    // it("should be a vue instance", () => {
-    //     const wrapper = shallow(Navbar)
+    afterEach(()=> {
+        sandbox.reset()
+        sandbox.restore()
+    })
 
-    //     expect(wrapper.isVueInstance()).toBeTruthy()
-    // })
+    it("should router push if logout is clicked", () =>{
+        const $router = {
+            push: sandbox.stub()
+        }
 
-    // TODO: test both ways of viewing (logged and guest)
+        const wrapper = shallow(Navbar, {store, localVue, mocks: {$router}})
+        wrapper.vm.Logout()
+        expect(wrapper.vm.$router.push).toBeCalled()
+    })
+
+    it("should call showModalLogin", () => {
+        const wrapper = shallow(Navbar)
+        wrapper.find("#modal-login-trigger").trigger("click")
+
+        expect(wrapper.vm.showModalLogin).toBeCalled()
+    })
+
+    it("should call showModalRegister", () => {
+        const wrapper = shallow(Navbar)
+        wrapper.find("#modal-register-trigger").trigger("click")
+
+        expect(wrapper.vm.showModalRegister).toBeCalled()
+    })
 })

@@ -1,16 +1,50 @@
-// import { shallow } from "@vue/test-utils"
-// import SideBar from "@/components/Utils/SideBar"
+import { Vuex } from "vuex"
+import { shallow, createLocalVue } from "@vue/test-utils"
+import sinon from "sinon"
+import SideBar from "@/components/Utils/SideBar"
 
 describe("SideBar.vue", () => {
-    it("placeholder text", () => {
-        // this one has the same problem as the login test
+    // const localVue = createLocalVue()
+    // localVue.use(Vuex)
+
+    const sandbox = sinon.createSandbox()
+    const stub = sandbox.stub()
+
+    let state
+    let actions
+    let store
+
+    beforeEach(() => {
+        actions = {
+
+        }
+
+        state = {
+            currentUser: {
+                id: 1,
+                username: "birl",
+                email: "goddamn@hot.com"
+            }
+        }
+
+        store = new Vuex.Store({
+            state,
+            actions,
+        })
     })
 
-    // it("should be a vue instance", () => {
-    //     const wrapper = shallow(SideBar)
+    afterEach(() => {
+        sandbox.reset()
+        sandbox.restore()
+    })
 
-    //     expect(wrapper.isVueInstance()).toBeTruthy()
-    // })
+    it("should load user info", () => {
+        const wrapper = shallow(SideBar, { store, localVue })
+        wrapper.vm.loadUserInfo()
 
-    // TODO: test both ways of viewing (logged and guest)
+        expect(actions.loadUserInfo.called).toBeTruthy()
+        expect(wrapper.vm.user.id).toEqual(state.currentUser.id)
+        expect(wrapper.vm.user.username).toEqual(state.currentUser.username)
+        expect(wrapper.vm.user.email).toEqual(state.currentUser.email)
+    })
 })
